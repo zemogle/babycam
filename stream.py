@@ -12,6 +12,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 IMAGE_DIR = "/home/pi/images/"
+TIMELAPSE_INTERVAL = 60
 
 class StreamingOutput(object):
     def __init__(self):
@@ -78,7 +79,7 @@ with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
     try:
         server_thread.start()
         while True:
-            time.sleep(120)
+            time.sleep(TIMELAPSE_INTERVAL)
             camera.capture('latest.jpg', use_video_port=True, splitter_port=2)
             timestamp = datetime.now().strftime("%Y%m%d%H%M")
             filename = '{}image{}.jpg'.format(IMAGE_DIR, timestamp)
