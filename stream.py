@@ -10,6 +10,7 @@ from http import server
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+from shutil import copyfile
 
 IMAGE_DIR = "/home/pi/images/"
 TIMELAPSE_INTERVAL = 60
