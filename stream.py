@@ -85,7 +85,7 @@ def server():
         server = StreamingServer(address, StreamingHandler)
         server_thread = Thread(target=server.serve_forever)
         output = StreamingOutput()
-        camera.start_recording(output, format='mjpeg', exposure_mode='night', awb_mode='off')
+        camera.start_recording(output, format='mjpeg')
         try:
             server_thread.start()
             while True:
