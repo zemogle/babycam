@@ -79,23 +79,19 @@ def timestamp_image(filename, timestamp):
     img.save(filename)
     return
 
-def server():
-    with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
-        address = ('0.0.0.0', 8000)
-        server = StreamingServer(address, StreamingHandler)
-        server_thread = Thread(target=server.serve_forever)
-        output = StreamingOutput()
-        camera.start_recording(output, format='mjpeg')
-        try:
-            server_thread.start()
-            while True:
-                time.sleep(TIMELAPSE_INTERVAL)
-                camera.capture('latest.jpg', use_video_port=True, splitter_port=2)
-                timestamp = datetime.now().strftime("%Y%m%d%H%M")
-                filename = '{}image{}.jpg'.format(IMAGE_DIR, timestamp)
-                copyfile('latest.jpg',filename)
-        finally:
-            camera.stop_recording()
-
-if __name__ == '__main__':
-    server()
+with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
+    address = ('0.0.0.0', 8000)
+    server = StreamingServer(address, StreamingHandler)
+    server_thread = Thread(target=server.serve_forever)
+    output = StreamingOutput()
+    camera.start_recording(output, format='mjpeg')
+    try:
+        server_thread.start()
+        while True:
+            time.sleep(TIMELAPSE_INTERVAL)
+            camera.capture('latest.jpg', use_video_port=True, splitter_port=2)
+            timestamp = datetime.now().strftime("%Y%m%d%H%M")
+            filename = '{}image{}.jpg'.format(IMAGE_DIR, timestamp)
+            copyfile('latest.jpg',filename)
+    finally:
+        camera.stop_recording()
