@@ -71,27 +71,31 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
-    address = ('0.0.0.0', 8000)
-    server = StreamingServer(address, StreamingHandler)
-    server_thread = Thread(target=server.serve_forever)
-    output = StreamingOutput()
-    camera.start_recording(output, format='mjpeg')
-    try:
-        server_thread.start()
-        while True:
-            time.sleep(TIMELAPSE_INTERVAL)
-            camera.capture('latest.jpg', use_video_port=True, splitter_port=2)
-            timestamp = datetime.now().strftime("%Y%m%d%H%M")
-            filename = '{}image{}.jpg'.format(IMAGE_DIR, timestamp)
-            copyfile('latest.jpg',filename)
-    finally:
-        camera.stop_recording()
-
 def timestamp_image(filename, timestamp):
     img = Image.open(filename)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("sans-serif.ttf", 16)
+    font = ImageFont.load_default()
     draw.text((0, 0),timestamp,(255,255,255),font=font)
     img.save(filename)
     return
+
+def server():
+    with picamera.PiCamera(resolution='800x600', framerate=10, exposure_mode='night', awb_mode='off') as camera:
+        address = ('0.0.0.0', 8000)
+        server = StreamingServer(address, StreamingHandler)
+        server_thread = Thread(target=server.serve_forever)
+        output = StreamingOutput()
+        camera.start_recording(output, format='mjpeg')
+        try:
+            server_thread.start()
+            while True:
+                time.sleep(TIMELAPSE_INTERVAL)
+                camera.capture('latest.jpg', use_video_port=True, splitter_port=2)
+                timestamp = datetime.now().strftime("%Y%m%d%H%M")
+                filename = '{}image{}.jpg'.format(IMAGE_DIR, timestamp)
+                copyfile('latest.jpg',filename)
+        finally:
+            camera.stop_recording()
+
+if __name__ == '__main__':
+    server()
