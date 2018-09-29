@@ -74,14 +74,14 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 def timestamp_image(filename, timestamp):
     img = Image.open(filename)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.load_default()
+    font = ImageFont.truetype("sans-serif.ttf", 16)
     draw.text((0, 0),timestamp,(255,255,255),font=font)
     img.save(filename)
     return
 
 def server():
     with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
-        address = ('0.0.0.0', 8000) 
+        address = ('0.0.0.0', 8000)
         server = StreamingServer(address, StreamingHandler)
         server_thread = Thread(target=server.serve_forever)
         output = StreamingOutput()
