@@ -80,12 +80,12 @@ def timestamp_image(filename, timestamp):
     return
 
 def server():
-    with picamera.PiCamera(resolution='800x600', framerate=10, exposure_mode='night', awb_mode='off', contrast=20) as camera:
+    with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
         address = ('0.0.0.0', 8000)
         server = StreamingServer(address, StreamingHandler)
         server_thread = Thread(target=server.serve_forever)
         output = StreamingOutput()
-        camera.start_recording(output, format='mjpeg')
+        camera.start_recording(output, format='mjpeg', exposure_mode='night', awb_mode='off', contrast=20)
         try:
             server_thread.start()
             while True:
