@@ -16,7 +16,7 @@ camera.iso = 800
 sleep(30)
 camera.exposure_mode = 'off'
 camera.awb_mode = 'off'
-camera.awb_gains = (Fraction(19, 16), Fraction(143, 128)
+camera.awb_gains = (Fraction(19, 16), Fraction(143, 128))
 # Finally, capture an image with a 6s exposure. Due
 # to mode switching on the still port, this will take
 # longer than 6 seconds
