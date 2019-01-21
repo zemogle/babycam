@@ -4,13 +4,14 @@ import logging
 import socketserver
 import time
 from datetime import datetime
-from threading import Thread
-from threading import Condition
+from threading import Thread, Condition
 from http import server
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 from shutil import copyfile
+from fractions import Fraction
+
 
 IMAGE_DIR = "/home/pi/images/"
 TIMELAPSE_INTERVAL = 60
@@ -83,7 +84,7 @@ with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
     camera.iso = 800
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
-    camera.awb_gains = 4.0
+    camera.awb_gains = (Fraction(19, 16), Fraction(143, 128))
     camera.vflip = True
     camera.hflip = True
     camera.shutter_speed = 100000
