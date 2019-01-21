@@ -80,6 +80,10 @@ def timestamp_image(filename, timestamp):
     return
 
 with picamera.PiCamera(resolution='800x600', framerate=10) as camera:
+    camera.iso = 800
+    camera.exposure_mode = 'off'
+    camera.awb_mode = 'off'
+    camera.awb_gains = 4.0
     address = ('0.0.0.0', 8000)
     server = StreamingServer(address, StreamingHandler)
     server_thread = Thread(target=server.serve_forever)
