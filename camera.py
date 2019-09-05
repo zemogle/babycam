@@ -10,7 +10,11 @@ from base_camera import BaseCamera
 class Camera(BaseCamera):
     @staticmethod
     def frames():
-        with picamera.PiCamera(resolution='1296x730', framerate=1) as camera:
+        if datetime.now().hour > 18 or datetime.now().hour < 7:
+            fr = 1
+        else:
+            fr = 10
+        with picamera.PiCamera(resolution='1296x730', framerate=fr) as camera:
             # let camera warm up
             if datetime.now().hour > 18 or datetime.now().hour < 7:
                 camera.iso = 800
@@ -22,7 +26,7 @@ class Camera(BaseCamera):
                 camera.iso = 100
                 camera.exposure_mode = 'auto'
                 camera.awb_mode = 'auto'
-                camera.shutter_speed = 100000
+                camera.shutter_speed = 0
             camera.vflip = True
             camera.hflip = True
             time.sleep(2)
