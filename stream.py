@@ -80,26 +80,30 @@ def timestamp_image(filename, timestamp):
     img.save(filename)
     return
 
-with picamera.PiCamera(resolution='800x600', framerate=1) as camera:
-    camera.iso = 800
-    camera.exposure_mode = 'off'
-    camera.awb_mode = 'off'
-    camera.awb_gains = (Fraction(19, 16), Fraction(143, 128))
-    camera.vflip = True
-    camera.hflip = True
-    camera.shutter_speed = 800000
-    address = ('0.0.0.0', 8000)
-    server = StreamingServer(address, StreamingHandler)
-    server_thread = Thread(target=server.serve_forever)
-    output = StreamingOutput()
-    camera.start_recording(output, format='mjpeg')
-    try:
-        server_thread.start()
-        while True:
-            time.sleep(TIMELAPSE_INTERVAL)
-            camera.capture('latest.jpg', use_video_port=True, splitter_port=2)
-            timestamp = datetime.now().strftime("%Y%m%d%H%M")
-            filename = '{}image{}.jpg'.format(IMAGE_DIR, timestamp)
-            copyfile('latest.jpg',filename)
-    finally:
-        camera.stop_recording()
+def runner():
+    with picamera.PiCamera(resolution='800x600', framerate=1) as camera:
+        camera.iso = 800
+        camera.exposure_mode = 'off'
+        camera.awb_mode = 'off'
+        camera.awb_gains = (Fraction(19, 16), Fraction(143, 128))
+        camera.vflip = True
+        camera.hflip = True
+        camera.shutter_speed = 800000
+        address = ('0.0.0.0', 8000)
+        server = StreamingServer(address, StreamingHandler)
+        server_thread = Thread(target=server.serve_forever)
+        output = StreamingOutput()
+        camera.start_recording(output, format='mjpeg')
+        try:
+            server_thread.start()
+            # while True:
+            #     time.sleep(TIMELAPSE_INTERVAL)
+            #     camera.capture('latest.jpg', use_video_port=True, splitter_port=2)
+            #     timestamp = datetime.now().strftime("%Y%m%d%H%M")
+            #     filename = '{}image{}.jpg'.format(IMAGE_DIR, timestamp)
+            #     copyfile('latest.jpg',filename)
+        finally:
+            camera.stop_recording()
+
+if __name__ == '__main__':
+    runner()
