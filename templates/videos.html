@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>Pemberley {{name}} camera</title>
+  </head>
+  <body>
+    <h1>{{name}}</h1>
+    <ul>
+    {% for file in files %}
+    <li><a href="{{ url_for('file') }}" >{{file}}</a></li>
+    {% endfor %}
+    </ul>
+  </body>
+</html>

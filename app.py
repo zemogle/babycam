@@ -1,19 +1,29 @@
 #!/usr/bin/env python
 from importlib import import_module
 import os
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, send_from_directory
 import socket
+from glob import glob
 
 from camera import Camera
 
 app = Flask(__name__)
 
 
+@app.route('/video/<path:path>')
+def send_video(path):
+    return send_from_directory('video', path)
+
 @app.route('/')
 def index():
     """Video streaming home page."""
     return render_template('index.html', name=socket.gethostname())
 
+@app.route('/videos/')
+def videos():
+    """ Timelapse list """
+    filelist = [x.split('/')[-1] for x in glob('video/*.mp4')]
+    return render_template('videos.html', name=socket.gethostname())
 
 def gen(camera):
     """Video streaming generator function."""
