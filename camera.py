@@ -10,19 +10,19 @@ from base_camera import BaseCamera
 class Camera(BaseCamera):
     @staticmethod
     def frames():
-        if datetime.now().hour > 18 or datetime.now().hour < 7:
+        if datetime.now().hour > 11 or datetime.now().hour < 15:
             fr = 1
         else:
             fr = 10
         with picamera.PiCamera(resolution='1296x730', framerate=fr) as camera:
             # let camera warm up
             time.sleep(2)
-            if datetime.now().hour > 18 or datetime.now().hour < 7:
+            if datetime.now().hour > 11 or datetime.now().hour < 15:
                 camera.iso = 800
-                camera.exposure_mode = 'off'
-                camera.awb_mode = 'off'
-                camera.awb_gains = (Fraction(19, 16), Fraction(143, 128))
-                camera.shutter_speed = 800000
+                camera.exposure_mode = 'night'
+                camera.awb_mode = 'auto'
+                # camera.awb_gains = (Fraction(19, 16), Fraction(143, 128))
+                camera.shutter_speed = 400000
             else:
                 camera.iso = 100
                 camera.exposure_mode = 'auto'

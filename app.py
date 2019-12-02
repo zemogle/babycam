@@ -5,7 +5,7 @@ from flask import Flask, render_template, Response, send_from_directory
 import socket
 from glob import glob
 
-from camera import Camera
+# from camera import Camera
 
 app = Flask(__name__)
 
@@ -23,7 +23,7 @@ def index():
 def videos():
     """ Timelapse list """
     filelist = [x.split('/')[-1] for x in glob('video/*.mp4')]
-    return render_template('videos.html', name=socket.gethostname())
+    return render_template('videos.html', name=socket.gethostname(), files=filelist[-7:])
 
 def gen(camera):
     """Video streaming generator function."""
